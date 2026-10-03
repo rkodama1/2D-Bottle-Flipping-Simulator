@@ -32,9 +32,10 @@ I'm keeping this version around as a starting point to build off of for future i
 
 ## Completed Improvements
 
-- Fixed simulation freezing
+- Fixed simulation freezing (when bottle is launched)
 
 ## What I've Learned
 
 - The simulation froze not because I was recreating the PShape every call to bottle(), but because it was constantly modifying velocity.
+- To give global and local variables different names to prevent confusion.
 - Add comments and space out functions for readability.
