@@ -25,7 +25,6 @@ I'm keeping this version around as a starting point to build off of for future i
 
 ## Planned Improvements
 
-- Fix simulation freezing
 - Add working bottle rotation
 - Improve launching system
 - Improve horizontal wall reflection + rotation
@@ -33,5 +32,9 @@ I'm keeping this version around as a starting point to build off of for future i
 
 ## Completed Improvements
 
+- Fixed simulation freezing
+
 ## What I've Learned
 
+- The simulation froze not because I was recreating the PShape every call to bottle(), but because it was constantly modifying velocity.
+- Add comments and space out functions for readability.
