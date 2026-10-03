@@ -1,3 +1,4 @@
+//instantiate variables and vectors.
 int water = 50;
 int section = 1;
 int randomValuesX[] = {0, 0, 0};
@@ -12,6 +13,7 @@ PVector acceleration = new PVector(0, 0);
 boolean mouseDragged = false;
 boolean rotate = false;
 
+//setup window size and color, create bottle and two arrows.
 void setup() {
   size(600, 600);
   background(0, 0, 255);
@@ -20,15 +22,15 @@ void setup() {
   bottle.beginShape();
   bottle.strokeWeight(2);
   bottle.noFill();
-  bottle.vertex(300, 400);
-  bottle.vertex(305, 400);
-  bottle.vertex(305, 405);
-  bottle.vertex(315, 415);
-  bottle.vertex(315, 460);
-  bottle.vertex(285, 460);
-  bottle.vertex(285, 415);
-  bottle.vertex(295, 405);
-  bottle.vertex(295, 400);
+  bottle.vertex(0, 0);
+  bottle.vertex(5, 0);
+  bottle.vertex(5, 5);
+  bottle.vertex(15, 15);
+  bottle.vertex(15, 60);  
+  bottle.vertex(-15, 60);
+  bottle.vertex(-15, 15);
+  bottle.vertex(-5, 5);
+  bottle.vertex(-5, 0);
   bottle.endShape(CLOSE);
   
   upArrow = createShape();
@@ -58,6 +60,7 @@ void setup() {
 
 void draw() {
   
+  //section 1 refers to start screen.
   if(section == 1) {
     background(0, 0, 255);
     
@@ -74,23 +77,26 @@ void draw() {
     fill(0);
     textSize(50);
     textAlign(CENTER);
-    text("PLAY", 300, 265);
+    text("START", 300, 265);
   
     strokeWeight(2);
     fill(150,75,0);
     rect(-1,500,601,100);
   }
   
+  //section 2 refers to actual simulation screen.
   if(section == 2) {
     background(255, 255, 255);
     strokeWeight(3);
     fill(0, 0, 0);
     rect(-1, 500, 601, 100);
     waterContent(water);
-    bottle(mass, water);
+    bottle(water);
+    
     if(upArrow.contains(mouseX, mouseY) && mousePressed && water < 100){
       water = water + 1;
     }
+    
     if(downArrow.contains(mouseX, mouseY) && mousePressed && water > 0){
       water = water - 1;
     }
@@ -98,35 +104,45 @@ void draw() {
   
 }
 
+//mouseReleased is for clicking start button, modifying y velocity, changes mouseDragged to false.
 void mouseReleased() {
   if(mouseX >= 200 && mouseX <= 400 && mouseY >= 200 && mouseY <= 300) {
       section = section + 1;
   }
+  
+  if(mouseDragged == true) {
+   velocity.y = -30;
+   acceleration.y = 3 + mass;
+  }
+  
   mouseDragged = false;
 }
 
+//mouseDragged modifies velocity.x based on mouse position, changes mouseDragged and rotate to true.
 void mouseDragged() {
   velocity.x = mouseX - pmouseX;
   mouseDragged = true;
   rotate = true;
 }
 
+//shows up and down arrows, displays water content value.
 void waterContent(int water) {
   shape(upArrow);
   shape(downArrow);
   text(water, 40, 246);
 }
 
-void bottle(float mass, int water) {
-  //if the water is higher than 25 subtract from upward and forward velocity. Do this on increments of 5 beyond that point.
-  shape(bottle);
-  mass = .2 * water;
+//does calculations and applies position, velocity, and acceleration for bottle. Sets boundaries for bottle.
+void bottle(int water) {
+  
+  mass = 0.2 * water;
   position.add(velocity);
   velocity.add(acceleration);
-  if(mouseDragged == true) {
-   velocity.y = -30;
-   acceleration.y = 3 + mass;
-  }
+  
+  pushMatrix();
+  translate(position.x, position.y);
+  shape(bottle);
+  popMatrix();
   
   if(position.y > 438) {
     rotate = false;
@@ -144,18 +160,4 @@ void bottle(float mass, int water) {
     velocity.x = -0.5 * velocity.x;
   }
   
-  bottle = createShape();
-  bottle.beginShape();
-  bottle.strokeWeight(2);
-  bottle.noFill();
-  bottle.vertex(position.x, position.y);
-  bottle.vertex(5 + position.x, position.y);
-  bottle.vertex(5 + position.x, 5 + position.y);
-  bottle.vertex(15 + position.x, 15 + position.y);
-  bottle.vertex(15 + position.x, 60 + position.y);
-  bottle.vertex(-15 + position.x, 60 + position.y);
-  bottle.vertex(-15 + position.x, 15 + position.y);
-  bottle.vertex(-5 + position.x, 5 + position.y);
-  bottle.vertex(-5+ position.x, position.y);
-  bottle.endShape(CLOSE);
 }
